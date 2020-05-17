@@ -1,0 +1,87 @@
+<?php 
+
+  session_start();
+ if (isset($_SESSION['arr']))
+{
+  $ar=unserialize($_SESSION['arr']) ;
+}
+  else {
+  $ar="No array session";
+  }
+   if (isset($_SESSION['str']))
+{
+  $s=unserialize($_SESSION['str']) ;
+}
+  else {
+  $s="No string session";
+  }
+   if (isset($_SESSION['int']))
+{
+  $i=unserialize($_SESSION['int']) ;
+}
+  else {
+  $i="No integer session";
+  }
+
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<!--<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+
+
+
+	<!-- Styles -->
+
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/contact.css">
+	<link rel="stylesheet" href="css/normalize.css" />
+</head>
+<body link="white" vlink="white" alink="white">
+<body>
+	<!-- Landing section -->
+
+		<header>
+			<div class="title"></div>
+			<ul>
+                <li><a class="active" href="#">Deserialize</a></li>
+                <li><a href="contact.php">Serialize</a></li>
+			</ul>
+			
+			</div>
+		</header>
+
+
+
+    <section style="padding-top: 100px; padding-bottom: 90px;" class="about">
+        <div class="about-header">
+            <h1>Deserialize</h1>
+        </div>
+        <div class="card">
+        <form  >
+				<h4><font color=#4a00e0>Array:</font></h4>
+				<?php print_r($ar)?>
+				<h4><font color=#4a00e0>String:</font></h4>
+				<?php print_r($s)?>
+				<h4><font color=#4a00e0>Integer:</font></h4>
+				<?php print_r($i)?>
+         </form>
+      </div>
+    </section>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+	<footer>
+			<p>&#169; 2020 <a href="https://www.instagram.com/orange_list/?hl=ru">KSENIA TSYBULKO</a></p>
+		</footer>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<?php
+$arrs="";
+$strs="";
+$ints="";
+session_start();
+   
+   if(isset($_POST["submit"])){
+		$a= $_POST['array'];
+		$ar=explode(" ",$a);
+		$arrs=serialize($ar);
+		$_SESSION['arr']=$arrs;
+		$strs=serialize($_POST['str']);
+		$_SESSION['str']=$strs;
+		$ints=serialize((int)$_POST['int']);
+		$_SESSION['int']=$ints;
+		
+	}
+?>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+   <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+    <title>Space - Universe</title>
+
+    <link rel="shortcut icon" type="image/png" href="images/favicon.png" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/contact.css">
+</head>
+<body link="white" vlink="white" alink="white">
+<body>
+    <header>
+        <div class="title"></div>
+        <ul>
+            <li><a href="asking.php">Deserialize</a></li>
+            <li><a class="active" href="#">Serialize</a></li>
+			
+        </ul>
+    </header>
+
+    <!-- Contact section -->
+    <section style="padding-top: 100px; padding-bottom: 90px;" class="about">
+        <div class="about-header">
+            <h1>Serialize</h1>
+        </div>
+        <div class="card">
+            <form name="form" onsubmit="return FormValidation()" method="POST" >
+                <input name="array" type="text" class="feedback-input" placeholder="Array" value="<?php if (isset($_POST['submit'])) { echo $_POST['array'];}?>"/>
+				<input name="str" type="text" class="feedback-input" placeholder="String" value="<?php if (isset($_POST['submit'])) { echo $_POST['str'];}?>"/>
+				<input name="int" type="number" class="feedback-input" placeholder="Integer" value="<?php if (isset($_POST['submit'])) { echo $_POST['int'];}?>" />
+                <input type="submit" value="SUBMIT" name="submit"/>
+				
+				<h4><font color=#4a00e0>Array:</font></h4>
+				<?php echo  $arrs ?>
+				<h4><font color=#4a00e0>String:</font></h4>
+				<?php echo $strs ?>
+				<h4><font color=#4a00e0>Integer:</font></h4>
+				<?php echo $ints ?>
+            </form>
+
+        </div>
+    </section>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+	<footer>
+			<p>&#169; 2020 <a href="https://www.instagram.com/orange_list/?hl=ru">KSENIA TSYBULKO</a></p>
+		</footer>
+</body>
+</html>
