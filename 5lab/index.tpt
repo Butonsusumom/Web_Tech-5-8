@@ -1,0 +1,563 @@
+<?php
+session_start();
+include_once('const.php');
+$mysqli = @new mysqli(HOST, USER, PASS, DB);
+if ($mysqli->connect_errno) {
+    printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+    exit();
+}
+if((!isset($_COOKIE["password"]))&&(!isset($_SESSION["session_username"]))){
+           header("location: \Login_v1\index.php");
+}
+if(!isset($_COOKIE["password"])){
+$quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_SESSION["session_username"]."'");
+}
+else{
+        $quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_COOKIE['login']."'");
+        }
+         $ro=$quer->fetch_assoc();
+         $status=$ro['status'];
+         if ($status!="admin"){
+          header("Location: /7lab/index.php");
+         }
+?>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <title>Managment</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+
+	<!-- Styles -->
+<style>
+
+select{
+  color: white;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight:200;
+  font-size: 18px;
+  border-radius: 10px;
+  line-height: 22px;
+  background-color: transparent;
+  border:2px solid black;
+  padding: 13px;
+  margin-bottom: 15px;
+  width:100%;
+  box-sizing: border-box;
+  outline:0;
+  width: 100%;
+}
+
+select:focus option{
+        color: black;
+        font-family: Helvetica, Arial, sans-serif;
+        font-weight:200;
+        font-size: 18px;
+        border-radius: 10px;
+        line-height: 22px;
+        background-color: transparent;
+        border:2px solid black;
+        padding: 13px;
+        margin-bottom: 15px;
+        width:100%;
+        box-sizing: border-box;
+        outline:0;
+        width: 100%;
+      }
+
+input[type="text"] {
+  color: white;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight:200;
+  font-size: 18px;
+  border-radius: 10px;
+  line-height: 22px;
+  background-color: transparent;
+  border:2px solid black;
+  padding: 13px;
+  margin-bottom: 15px;
+  width:100%;
+  box-sizing: border-box;
+  outline:0;
+  width: 100%;
+}
+
+input[type="text"]:focus {
+  border:2px solid #000;
+}
+
+[type="date"] {
+   color: #1b1c1c;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight:200;
+    font-size: 18px;
+    border-radius: 10px;
+    line-height: 22px;
+    background-color: transparent;
+    border:2px solid #1b1c1c;
+    padding: 13px;
+    margin-bottom: 15px;
+    width:100%;
+    box-sizing: border-box;
+    outline:0;
+    width: 100%;
+}
+[type="submit"] {
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+    width: 100%;
+    background:#1b1c1c;
+    border-radius: 10px;
+    border:0;
+    cursor:pointer;
+    color:white;
+    font-size:24px;
+    padding-top:10px;
+    padding-bottom:10px;
+    margin-top:-4px;
+    font-weight:700;
+}
+
+[type="submit"]:hover { background:#000; }
+
+[type="reset"] {
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+    width: 100%;
+    background:#1b1c1c;
+    border-radius: 10px;
+    border:0;
+    cursor:pointer;
+    color:white;
+    font-size:24px;
+    padding-top:10px;
+    padding-bottom:10px;
+    margin-top:-4px;
+    font-weight:700;
+}
+
+[type="reset"]:hover { background:#000; }
+
+li{
+color:white;
+}
+</style>
+
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/normalize.css" />
+</head>
+<body link="white" vlink="white" alink="white">
+<body>
+	<!-- Landing section -->
+	
+		<header>
+			<div class="title"></div>
+			<ul>
+				<li><a class="active" href="#">{DB="0"}</a></li>
+				<li><a href="admin.php">{DB="1"}</a></li>
+				<li><a href="asking.php">{DB="2"}</a></li>
+				<li><a href="search.php">{DB="3"}</a></li>
+				<li><a href="\8lab\index.php">{DB="4"}</a></li>
+				 <li><a href="\Login_v1\logout.php">{DB="11"}</a></li>
+			</ul>
+		</header>
+
+	
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+    	<br>
+    	<br>
+
+       <div class="container">
+          <div>
+            <form method="POST" >
+    			<h2 style="color:white">{DB="5"}</h2>
+    			<hr/>
+    				<br><input type="date" name="calendar" min=<?php echo date("Y-m-d") ?>  required><br><br>
+    				<input type="radio" name="dayType"  value="green" required/> Acoustic
+    				<input type="radio" name="dayType"  value="blue" required/> Bass
+    				<input type="radio" name="dayType"  value="red" required/> Electro <br>
+    				<br><input type="text" name="info"  placeholder="Input model.."  required>
+    				<br><input type="text" name="address" placeholder="Input address.." required>
+    				<input type="radio" name="delType"  value="del" required/> Delivery
+                     <input type="radio" name="delType"  value="sel" required/> Self
+    				<br><br><input type="submit" name="add" value="Add">
+
+
+
+    			<?php
+    				include_once('const.php');
+
+    				if (isset($_POST['add'])) {
+
+    					$mysqli = @new mysqli(HOST, USER, PASS, DB);
+
+    					if ($mysqli->connect_errno) {
+    						echo "Соединение не удалось: %s\n";
+    						exit();
+    					}
+
+    					$imgUrl = 0;
+    					$dayType = "";
+    					$delType = "";
+
+    					switch ($_POST['dayType']) {
+    						case 'red':
+    							$dayType = "Electro";
+    							$imgUrl = 1;
+    							break;
+    						case 'blue':
+    							$dayType = "Bass";
+    							$imgUrl = 2;
+    							break;
+    						case 'green':
+    							$dayType = "Acoustic";
+    							$imgUrl = 3;
+    							break;
+    					}
+
+    					switch ($_POST['delType']) {
+                            						case 'del':
+                            							$delType = "delivery";
+
+                            							break;
+                            						case 'sel':
+                            							$delType = "self";
+
+                            							break;
+
+                            					}
+                            $result = $mysqli->query("SELECT model FROM catalog WHERE  model='" . $_POST['info'] . "'");
+                            if (mysqli_num_rows($result) <= 0){
+                                  $mysqli->query("INSERT INTO `catalog` (date,model,address,type,img_id,delivery,status,person) values ('" . $_POST['calendar'] . "', '" . $_POST['info'] . "', '" . $_POST['address'] . "','" . $dayType . "', '" . $imgUrl. "', '" . $delType. "', 'in process' , 0);");
+                           		echo "<hr /><h4 style='color:white'>Status : Added!</h4>";
+
+                                					$command = "ADD";
+                                					$now = time();
+                                					$dateTime = date('Y-m-d H-i-s', $now);
+                                					$query = "INSERT INTO admin (model, command, time) values ('" .  $_POST['info'] . "', '" . $command . "', '" . $dateTime . "');";
+                                					$mysqli->query($query);
+                            }
+                            else {
+                                echo "<h4 style='color:white'>|Such model already exists|</h4 >";
+                            }
+
+    				}
+    			?>
+              </form>
+    		  </div>
+
+    		 <div >
+    			<h2 style="color:white">{DB="6"}</h2>
+    			<hr/>
+    			<?php
+    				$mysqli = @new mysqli(HOST, USER, PASS, DB);
+
+    				if ($mysqli->connect_errno) {
+    					printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+    					exit();
+    				}
+
+
+    				$checkArr = [];
+
+    				if ($result = $mysqli->query("SELECT * FROM catalog ORDER BY date ")) {
+    					while ($row = $result->fetch_assoc()) {
+    						if (!in_array($row['date'], $checkArr)) {
+    							$dateForLink = $row['date'];
+    							$Type = $row['type'];
+    							echo "<li><a class='$Type' href='./index.php?p=$dateForLink'>$dateForLink</a></li>";
+
+    							array_push($checkArr, $row['date']);
+    						}
+    					}
+
+    					$result->free();
+    				}
+    				$mysqli->close();
+    			?>
+    		</div>
+
+    		<div>
+    			<h2 style="color:white">{DB="7"}</h2>
+    			<hr/>
+
+    			<?php
+    				if (empty($_GET)) {
+    					echo "Choose any link..";
+    				} else {
+    					$mysqli = @new mysqli(HOST, USER, PASS, DB);
+
+    					if ($mysqli->connect_errno) {
+    						printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+    						exit();
+    					}
+
+    					if ($result = $mysqli->query("SELECT * FROM catalog WHERE date='" . $_GET['p'] . "';")) {
+    						while ($row = $result->fetch_assoc()) {
+    						$id=$row['img_id'];
+    						        $res = $mysqli->query("SELECT `url` FROM img_url WHERE id =$id;");
+    						        $ro= $res->fetch_assoc();
+    						    echo "Date: ";echo  $row['date']; echo ' <br/>';
+    						    echo "Model: ";echo $row['model']; echo ' <br/>';
+    							echo "Address: ";echo  $row['address'] ; echo ' <br/>';
+    							echo "Type: "; echo $row['type']; echo ' <br/>';
+    							echo "Delivery: "; echo $row['delivery']; echo ' <br/>';
+    							echo "Status: "; echo $row['status']; echo ' <br/>';
+    							echo "<p><img width='250' height='20' src= " . $ro['url'] ."></p>";
+    							echo "<hr/>";
+    						}
+    						$result->free();
+    					}
+    					$mysqli->close();
+    				}
+    			?>
+
+    		</div>
+
+    		<div >
+    			<h2 style="color:white">{DB="8"}</h2>
+    			<hr/>
+
+    			<form method="POST">
+                       <input type="text" placeholder="Model" name="valueRaw" required>
+    				<select name="fieldToUpdate" placeholder="Choose" required>
+    					<option value="fieldByDate" >Date</option>
+    					<option value="fieldByModel">Model</option>
+    					<option value="fieldByType">Type</option>
+    					<option value="fieldByAddress">Address</option>
+    					<option value="fieldByDelivery">Delivery</option>
+    					<option value="fieldByStatus">Status</option>
+    				</select>
+
+
+    				<br><br><input type="text" placeholder="New value" name="valueField" required>
+
+    				<br><br><input type="submit" name="update" value="Update">
+    			</form>
+
+    			<?php
+    				if (isset($_POST['fieldToUpdate'], $_POST['update'])) {
+
+    					$rowToUpdate = "model";
+    					$date=1;
+
+    					$fieldToUpdate = "";
+    					$select = $_POST['fieldToUpdate'];
+    					switch ($select) {
+    						case 'fieldByDate':
+    							$fieldToUpdate = "date";
+    							$pattern = "/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/";
+    							preg_match($pattern, $_POST['valueField'], $razdeli);
+    							$date=checkdate($razdeli[2],$razdeli[3],$razdeli[1]);
+    							//$date=DateTime::createFromFormat('YYYY-mm-dd', $_POST['valueField']);
+    							break;
+    						case 'fieldByModel':
+    							$fieldToUpdate = "model";
+    							break;
+    						case 'fieldByType':
+    							$fieldToUpdate = "type";
+    							break;
+    					    case 'fieldByAddress':
+                                 $fieldToUpdate = "address";
+                                 break;
+    					    case 'fieldByDelivery':
+                                 $fieldToUpdate = "delivery";
+                                 break;
+    					    case 'fieldByStatus':
+                                 $fieldToUpdate = "status";
+                                 break;
+    					}
+
+    					$mysqli =@new mysqli(HOST, USER, PASS, DB);
+
+    					if ($mysqli->connect_errno) {
+    						printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+    						exit();
+    					}
+
+
+
+                        if ($date){
+    					  if ($result = $mysqli->query("UPDATE catalog SET " . $fieldToUpdate . "='" . $_POST['valueField'] . "' where " . $rowToUpdate . "='" . $_POST['valueRaw'] . "';")) {
+
+    					  $rez = $mysqli->query("SELECT * FROM catalog WHERE " . $rowToUpdate . "='" . $_POST['valueRaw'] . "';");
+                                                      							                            $row = $rez->fetch_assoc();
+                                                                                      						$id=$row['person'];
+
+
+                                                                                      						  $res = $mysqli->query("SELECT * FROM usertbl WHERE id =$id;");
+                                                                                      						   $ro= $res->fetch_assoc();
+                                                                                      						    $email=$ro['email'];
+
+                                                                                      						    $re = $mysqli->query("SELECT * FROM usertbl WHERE id =$id;");
+                                                                                                                  $r= $re->fetch_assoc();
+                                                                                                                  $name=$r['nam'];
+                                                                                      						     $message = "There some changes in your order. "."\n". $fieldToUpdate . " changed to " . $_POST['valueField'] . "\n\n\n\n" . "Good luck!\n Guitar Shop.";
+                                                                                                                   $formcontent= "Hello, ".$name." ! \r\n"."$message";
+                                                                                                                    $recipient = $email;
+                                                                                                                    $subject = "=?utf-8?B?". base64_encode("Guitar order update"). "?=";
+                                                                                                                     $mailheader= 'From: no.reply.guitarland@gmail.com' . "\r\n" .
+                                                                                                                         'Reply-To:'.$email . "\r\n" .
+                                                                                                                         'X-Mailer: PHP/' . phpversion();
+
+
+                                                                                                  mail($recipient, $subject, $formcontent, $mailheader) or die("Error!");
+
+
+
+
+
+
+
+
+    					            $command = "EDIT";
+                                    $now = time();
+                                    $dateTime = date('Y-m-d H-i-s', $now);
+                                    $query = "INSERT INTO admin (model, command, time) values ('" .  $_POST['valueRaw'] . "', '" . $command . "', '" . $dateTime . "');";
+                                    $mysqli->query($query);
+    						if ($fieldToUpdate == "type") {
+    						$imgUrl=0;
+    							switch ($_POST['valueField']) {
+    								case "Electro":
+    									$imgUrl = 1;
+    									break;
+    								case "Bass":
+    									$imgUrl = 2;
+    									break;
+    								case "Acoustic":
+    									$imgUrl = 3;
+    									break;
+    							}
+    							$mysqli->query("UPDATE catalog SET img_id='" . $imgUrl . "' where " . $rowToUpdate . "='" . $_POST['valueRaw'] . "';");
+
+
+
+
+    						}
+                            	echo "<hr /><h4 style='color:white'>Status : Updated!</h4>";
+
+    					  }
+
+    					   $mysqli->close();
+
+    				   }
+    			     }
+    			?>
+    		</div>
+    		<div >
+    			<h2 style="color:white">{DB="9"}</h2>
+    			<hr/>
+
+    			<form method="POST">
+    				<select name="deleteRaw" required>
+    					<option value="deleteDate" selected>Date</option>
+    					<option value="deleteInfo">Model</option>
+    					<option value="deleteType">Type</option>
+    					<option value="deleteAddress">Address</option>
+    					<option value="deleteStatus">Status</option>
+    					<option value="deleteDelivery">Delivery</option>
+    					<option value="deleteAll">All</option>
+    				</select>
+    				<br><br><input type="text" placeholder="deleteParam" name="dataForDelete" required>
+                     <br><input type="submit" name="delete" value="Delete">
+    			</form>
+
+    			<?php
+    				if (isset($_POST['deleteRaw'], $_POST['delete'])) {
+    					$fieldToDelete = "";
+
+    					$select = $_POST['deleteRaw'];
+    					switch ($select) {
+    						case 'deleteDate':
+    							$fieldToDelete = "date";
+    							break;
+    						case 'deleteInfo':
+    							$fieldToDelete = "model";
+    							break;
+    						case 'deleteType':
+    							$fieldToDelete = "type";
+    							break;
+    						case 'deleteAll':
+    							$fieldToDelete = "all";
+    							break;
+    						case 'deleteAddress':
+                                 $fieldToDelete = "address";
+                                  break;
+    						case 'deleteStatus':
+                                 $fieldToDelete = "status";
+                                  break;
+    						case 'deleteDelivery':
+                                 $fieldToDelete = "delivery";
+                                  break;
+
+    					}
+
+    					$mysqli = @new mysqli(HOST, USER, PASS, DB);
+
+                            					if ($mysqli->connect_errno) {
+                            						printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+                            						exit();
+                            					}
+
+
+    					if ($fieldToDelete !== 'all') {
+    						$query = "DELETE FROM catalog WHERE " . $fieldToDelete . "='" . $_POST['dataForDelete'] . "';";
+    					} else {
+    						$query = "DELETE FROM catalog;";
+    					}
+    					if ($result = $mysqli->query($query)) {
+    					                                     $model = $fieldToDelete." : ".$_POST['dataForDelete'];
+                            							     $command = "DELETE";
+                                                             $now = time();
+                                                             $dateTime = date('Y-m-d H-i-s', $now);
+                                                             $query = "INSERT INTO admin (model, command, time) values ('" .  $model . "', '" . $command . "', '" . $dateTime . "');";
+                                                             $mysqli->query($query);
+    						echo "<hr /><h4 style='color:white'>Status : Deleted!</h4>";
+    					}
+
+
+
+    				}
+    			?>
+    		</div>
+    	</div>
+    </div>
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+	<footer>
+			<p>&#169; 2020 <a href="https://www.instagram.com/orange_list/?hl=ru">KSENIA TSYBULKO</a></p>
+		</footer>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<?php
+//"name"="";
+
+session_start();
+
+include_once('const.php');
+$mysqli = @new mysqli(HOST, USER, PASS, DB);
+if ($mysqli->connect_errno) {
+    printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+    exit();
+}
+if((!isset($_COOKIE["password"]))&&(!isset($_SESSION["session_username"]))){
+           header("location: \Login_v1\index.php");
+}
+if(!isset($_COOKIE["password"])){
+$quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_SESSION["session_username"]."'");
+//"name"=$_SESSION["session_username"];
+}
+else{
+        $quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_COOKIE['login']."'");
+        //"name"=$_COOKIE['login'];
+        }
+         $ro=$quer->fetch_assoc();
+         $status=$ro['status'];
+         if ($status!="admin"){
+          header("Location: /7lab/index.php");
+         }
+if (!isset($_COOKIE["name"])){
+echo "kek";
+    setcookie("name",serialize($his),time()+(30 * 24 * 60 * 60),'/');
+
+}
+else{
+$his=unserialize($_COOKIE["name"]);
+}
+
+   function Kyk($str) {
+                       $hist=unserialize($_COOKIE["name"]);
+                       $hist[]=$str;
+                      setcookie("name",serialize($hist));
+                       return $hist;
+   }
+
+?>
+
+
+
+
+<?php
+function search ($query)
+{
+include_once('const.php');
+            $mysql = @new mysqli(HOST, USER, PASS, DB);
+          		if ($mysql->connect_errno) {
+          			printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+          			exit();
+          		}
+
+    $query = trim($query);
+    $query = htmlspecialchars($query);
+
+    if (!empty($query))
+    {
+        if (strlen($query) < 3) {
+            $text = '<p>Too short</p>';
+        } else if (strlen($query) > 128) {
+            $text = '<p>Too long</p>';
+        } else {
+            $q = "SELECT `id`
+                  FROM `catalog` WHERE `date` LIKE '%$query%'
+                  OR `model` LIKE '%$query%' OR `address` LIKE '%$query%'
+                  OR `type` LIKE '%$query%'";
+
+            $result = $mysql->query($q);
+
+            if ($mysql->affected_rows > 0) {
+                $row = $result->fetch_assoc();
+                $num = $result->num_rows;
+
+                $text = '<p>By query <b>'.$query.'</b> found: '.$num.'</p>';
+
+                do {
+                    // Делаем запрос, получающий ссылки на статьи
+                    $result1 = $mysql->query("SELECT * FROM catalog WHERE id='" . $row['id'] . "';");
+                        $rows = $result1->fetch_assoc();
+                        	$id=$rows['img_id'];
+                            $res = $mysql->query("SELECT `url` FROM img_url WHERE id =$id;");
+                            $ro= $res->fetch_assoc();
+                                                    	echo "<hr/>";
+                             echo "Date: ";echo  $rows['date']; echo ' <br/>';
+                        	 echo "Model: ";echo $rows['model']; echo ' <br/>';
+                        	echo "Address: ";echo  $rows['address'] ; echo ' <br/>';
+                        	echo "Type: "; echo $rows['type']; echo ' <br/>';
+                        	echo "<p><img width='250' height='20' src= " . $ro['url'] ."></p>";
+                        	echo "<hr/>";
+                    if ($mysql->affected_rows > 0) {
+                        $row1 = $result1->fetch_assoc();
+                    }
+
+                    $text = '';
+
+                } while ($row = $result->fetch_assoc());
+            } else {
+                $text = '<p>Nothing found</p>';
+            }
+        }
+    } else {
+        $text = '<p>Empty request</p>';
+    }
+
+    return $text;
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+	
+	<link rel="shortcut icon" type="image/png" href="images/favicon.png"/>
+
+	<!-- Styles -->
+	<style>
+* {box-sizing: border-box;}
+form {
+  width: auto;
+  float: right;
+  margin-right: 30px;
+}
+input {
+  width: 250px;
+  height: 42px;
+  padding-left: 15px;
+  border-radius: 42px;
+  border: 2px solid #324b4e;
+  background: #F9F0DA;
+  outline: none;
+  position: relative;
+  transition: .3s linear;
+}
+input:focus {
+  width: 300px;
+}
+button {
+  width: 42px;
+  height: 42px;
+  background: none;
+  border: none;
+  position: absolute;
+  top: -2px;
+  right: 0;
+}
+button:before{
+  content: "";
+  font-family: FontAwesome;
+  color: #324b4e;
+}
+
+
+
+
+
+
+bod{
+  font-family: monospace;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin:0;
+  padding: 0;
+  width: 100%;
+}
+#toggle{
+  visibility: hidden;
+  opacity: 0;
+  position: relative;
+  z-index: -1;
+}
+
+#toggle:checked ~ dialog {
+  display: block;
+}
+
+label{
+  background: black;
+  color: white;
+  padding: .5em 1em;
+  border-radius: 4px;
+}
+@keyframes appear {
+  0%{
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+dialog{
+  animation: appear 350ms ease-in 1;
+  max-width: 500px;
+}
+
+	</style>
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/index.css">
+</head>
+<body link="white" vlink="white" alink="white">
+<body>
+	<!-- Landing section-->
+	<section class="landing">
+
+		<header>
+			<div class="title"></div>
+			<ul>
+				<li><a href="index.php">{DB="0"}</a></li>
+                <li><a href="admin.php">{DB="1"}</a></li>
+                <li><a href="asking.php">{DB="2"}</a></li>
+                <li><a class="active" href="#">{DB="3"}</a></li>
+                <li><a href="\8lab\index.php">{DB="4"}</a></li>
+                <li><a href="\Login_v1\logout.php">{DB="11"}</a></li>
+			</ul>
+
+		</header>
+	
+	<div class="landing-main"style="height:600px;width:800px;overflow:scroll;overflow-x:hidden;overflow-y:scroll;align:center;" >
+
+
+		<form method="POST">
+	  <input type="text" name="request" placeholder="Enter...">
+      <button type="submit" name="search" value="Search"></button>
+
+<input type="checkbox" id="toggle">
+<label for="toggle">History</label>
+
+<dialog style="height:200px;width:200px;overflow:scroll;overflow-x:hidden;overflow-y:scroll;align:center;">
+<?php
+$his=Kyk($_POST['request']);
+foreach($his as $value){
+?>
+  <p>
+  <?php
+  echo $value;
+  ?>
+  </p>
+  <?php } ?>
+  <label for="toggle">Close</label>
+</dialog>
+
+
+
+      <?php
+      if (isset($_POST['search'])) {
+     		    if (!empty($_POST['request'])) {
+                            $out=search ($_POST['request']);
+                            echo $out;
+                            $his=Kyk($_POST['request']);
+                            //print_r($his);
+                  }
+      }
+
+      ?>
+      </form>
+
+
+
+
+
+ </div>
+
+	
+	</section>
+
+
+
+	<footer>
+			<p>&#169; 2020 <a href="https://www.instagram.com/orange_list/?hl=ru">KSENIA TSYBULKO</a></p>
+		</footer>
+</body>
+</html>

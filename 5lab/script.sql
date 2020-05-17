@@ -1,0 +1,98 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema guitar
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema guitar
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `guitar` DEFAULT CHARACTER SET utf8 ;
+USE `guitar` ;
+
+-- -----------------------------------------------------
+-- Table `guitar`.`admin`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `guitar`.`admin` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `model` VARCHAR(255) NOT NULL,
+  `command` VARCHAR(45) NOT NULL,
+  `time` DATETIME NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 0
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `guitar`.`asking`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `guitar`.`asking` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL DEFAULT NULL,
+  `answer` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 0
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `guitar`.`catalog`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `guitar`.`catalog` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `date` DATE NULL DEFAULT NULL,
+  `model` TEXT NULL DEFAULT NULL,
+  `address` LONGTEXT NULL DEFAULT NULL,
+  `type` VARCHAR(45) NULL DEFAULT NULL,
+  `img_id` INT(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 0
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `guitar`.`img_url`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `guitar`.`img_url` (
+  `id` INT(11) NOT NULL,
+  `url` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `guitar`.`stat`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `guitar`.`stat` (
+  `answer` VARCHAR(45) NOT NULL,
+  `col` INT(11) NOT NULL,
+  PRIMARY KEY (`answer`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `guitar`.`structure`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `guitar`.`structure` (
+  `id` INT(11) NOT NULL,
+  `var` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

@@ -1,0 +1,152 @@
+<?php
+session_start();
+include_once('const.php');
+$mysqli = @new mysqli(HOST, USER, PASS, DB);
+if ($mysqli->connect_errno) {
+    printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+    exit();
+}
+if((!isset($_COOKIE["password"]))&&(!isset($_SESSION["session_username"]))){
+           header("location: \Login_v1\index.php");
+}
+if(!isset($_COOKIE["password"])){
+$quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_SESSION["session_username"]."'");
+}
+else{
+        $quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_COOKIE['login']."'");
+        }
+         $ro=$quer->fetch_assoc();
+         $status=$ro['status'];
+         if ($status!="admin"){
+          header("Location: /7lab/index.php");
+         }
+?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<!--<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+
+
+
+	<!-- Styles -->
+	<style>
+.form_toggle {
+	display: inline-block;
+	overflow: hidden;
+}
+.form_toggle-item {
+	float: left;
+	display: inline-block;
+}
+.form_toggle-item input[type=radio] {
+	display: none;
+}
+.form_toggle-item label {
+	display: inline-block;
+	padding: 0px 15px;
+	line-height: 34px;
+	border: 1px solid #999;
+	border-right: none;
+	cursor: pointer;
+	user-select: none;
+}
+
+.form_toggle .item-1 label {
+	border-radius: 6px 0 0 6px;
+}
+.form_toggle .item-2 label {
+	border-radius: 0 6px 6px 0;
+	border-right: 1px solid #999;
+}
+
+/* Checked */
+.form_toggle .item-1 input[type=radio]:checked + label {
+	background: #ffc5c5;
+}
+.form_toggle .item-2 input[type=radio]:checked + label {
+	background: #bbffbb;
+}
+	</style>
+
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/contact.css">
+	<link rel="stylesheet" href="css/normalize.css" />
+</head>
+<body link="white" vlink="white" alink="white">
+<body>
+	<!-- Landing section -->
+
+		<header>
+			<div class="title"></div>
+			<ul>
+				<li><a href="index.php">{DB="0"}</a></li>
+                <li><a href="admin.php">{DB="1"}</a></li>
+                <li><a class="active" href="#">{DB="2"}</a></li>
+                <li><a href="search.php">{DB="3"}</a></li>
+                <li><a href="\8lab\index.php">{DB="4"}</a></li>
+                <li><a href="\Login_v1\logout.php">{DB="11"}</a></li>
+			</ul>
+			
+			</div>
+		</header>
+
+
+
+    <section style="padding-top: 100px; padding-bottom: 90px;" class="about">
+        <div class="about-header">
+            <h1>QUESTION</h1>
+        </div>
+        <div class="card">
+        <form method="POST" >
+                <h2>Do you know how to play the guitar?</h2>
+                <input name="name" type="text" class="feedback-input" placeholder="Name" />
+                <br><br>
+                <div class="form_toggle">
+                	<div class="form_toggle-item item-1">
+                		<input id="fid-1" type="radio" name="userAnswer" value="no" checked>
+                		<label for="fid-1">No</label>
+                	</div>
+                	<div class="form_toggle-item item-2">
+                		<input id="fid-2" type="radio" name="userAnswer" value="yes">
+                		<label for="fid-2">Yes</label>
+                	</div>
+                </div>
+                <br><br>
+                   <br><br>
+                      <br><br>
+                <input type="submit" name="enter" value="SUBMIT" />
+
+
+        <?php
+
+        if (isset($_POST['enter'])) {
+        					$mysqli =@new mysqli(HOST, USER, PASS, DB);
+        					if ($mysqli->connect_errno) {
+        						printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+        						exit();
+        					}
+        					$mysqli->query("INSERT INTO asking (name, answer) values ('". $_POST['name'] . "', '". $_POST['userAnswer'] . "')");
+        					$mysqli->query("UPDATE `stat`  SET `col`=`col`+ 1 WHERE  `answer`='". $_POST['userAnswer'] . "'");
+        					$mysqli->close();
+        				}
+         				?>
+         </form>
+      </div>
+    </section>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+	<footer>
+			<p>&#169; 2020 <a href="https://www.instagram.com/orange_list/?hl=ru">KSENIA TSYBULKO</a></p>
+		</footer>
+</body>
+</html>

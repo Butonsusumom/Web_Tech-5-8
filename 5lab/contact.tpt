@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+   <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+    <title>Space - Universe</title>
+
+    <link rel="shortcut icon" type="image/png" href="images/favicon.png" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/contact.css">
+</head>
+<body link="white" vlink="white" alink="white">
+<body>
+    <header>
+        <div class="title"></div>
+        <ul>
+            <li><a href="index.php">{DB="0"}</a></li>
+            <li><a href="admin.php">{DB="1"}</a></li>
+            <li><a href="asking.php">{DB="2"}</a></li>
+            <li><a href="search.php">{DB="3"}</a></li>
+            <li><a class="active" href="#">{DB="4"}</a></li>
+			
+        </ul>
+    </header>
+
+    <!-- Contact section -->
+    <section style="padding-top: 100px; padding-bottom: 90px;" class="about">
+        <div class="about-header">
+            <h1>{DB="4"}</h1>
+        </div>
+        <div class="card">
+            <form name="form" onsubmit="return FormValidation()">
+                <input name="name" type="text" class="feedback-input" placeholder="Name" />
+                <input name="email" type="text" class="feedback-input" placeholder="Email" />
+                <textarea name="message" class="feedback-input" placeholder="Message"></textarea>
+                <input type="submit" value="SUBMIT" />
+            </form>
+        </div>
+    </section>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+	<footer>
+			<p>&#169; 2020 <a href="https://www.instagram.com/orange_list/?hl=ru">KSENIA TSYBULKO</a></p>
+		</footer>
+</body>
+</html>

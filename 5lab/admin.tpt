@@ -1,0 +1,154 @@
+<?php
+session_start();
+include_once('const.php');
+$mysqli = @new mysqli(HOST, USER, PASS, DB);
+if ($mysqli->connect_errno) {
+    printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+    exit();
+}
+if((!isset($_COOKIE["password"]))&&(!isset($_SESSION["session_username"]))){
+           header("location: \Login_v1\index.php");
+}
+if(!isset($_COOKIE["password"])){
+$quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_SESSION["session_username"]."'");
+}
+else{
+        $quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_COOKIE['login']."'");
+        }
+         $ro=$quer->fetch_assoc();
+         $status=$ro['status'];
+         if ($status!="admin"){
+          header("Location: /7lab/index.php");
+         }
+?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<style>
+table.blueTable {
+  border: 1px solid #9235e3;
+  background-color: #e7d2f9;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+table.blueTable td, table.blueTable th {
+  font-family: 'Montserrat', sans-serif;
+  border: 1px solid #e7d2f9;
+  padding: 3px 2px;
+}
+table.blueTable tbody td {
+  font-size: 25px;
+}
+table.blueTable tr:nth-child(even) {
+  background: #e7d2f9;
+}
+table.blueTable thead {
+  background: #8e2de2;
+  background: -moz-linear-gradient(top,  #aa62ea 0%,	 #9e4be7 66%, #9235e3 100%);
+  background: -webkit-linear-gradient(top,  #aa62ea 0%, 	 #9e4be7 66%, #9235e3 100%);
+  background: linear-gradient(to bottom,  #aa62ea 0%, 	 #9e4be7 66%, #9235e3 100%);
+  border-bottom: 2px solid #444444;
+}
+table.blueTable thead th {
+  font-size: 30px;
+  font-weight: bold;
+  color: #e7d2f9;
+  border-left: 2px solid #D0E4F5;
+}
+table.blueTable thead th:first-child {
+  border-left: none;
+}
+
+table.blueTable tfoot {
+  font-size: 14px;
+  font-weight: bold;
+  color: #e7d2f9;
+  background: #c28ff0;
+  background: -moz-linear-gradient(top,  #dbbcf6 0%, #cfa5f3 66%, #c28ff0 100%);
+  background: -webkit-linear-gradient(top,  #dbbcf6 0%, #cfa5f3 66%, #c28ff0 100%);
+  background: linear-gradient(to bottom,  #dbbcf6 0%, #cfa5f3 66%, #c28ff0 100%);
+  border-top: 2px solid #444444;
+}
+table.blueTable tfoot td {
+  font-size: 14px;
+}
+table.blueTable tfoot .links {
+  text-align: right;
+}
+table.blueTable tfoot .links a {
+  display: inline-block;
+  background: #9235e3;
+  color: #e7d2f9;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+</style>
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/index.css">
+
+
+
+</head>
+<body link="white" vlink="white" alink="white">
+<body>
+	<!-- Landing section -->
+<section class="landing">
+		<header>
+			<div class="title"></div>
+			<ul>
+			<li><a href="index.php">{DB="0"}</a></li>
+            <li><a class="active" href="#">{DB="1"}</a></li>
+            <li><a href="asking.php">{DB="2"}</a></li>
+            <li><a href="search.php">{DB="3"}</a></li>
+            <li><a href="\8lab\index.php">{DB="4"}</a></li>
+            <li><a href="\Login_v1\logout.php">{DB="11"}</a></li>
+			</ul>
+		</header>
+		<div class="landing-main"  >
+
+		   <?php
+				include_once('const.php');
+                $mysqli = @new mysqli(HOST, USER, PASS, DB);
+					if ($mysqli->connect_errno) {
+						printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+						exit();
+					}
+					echo '
+					<table class="blueTable">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Model</th>
+							<th>Command</th>
+							<th>Time</th>
+						</tr>
+					</thead>';
+
+					if ($result = $mysqli->query("SELECT * FROM admin;")) {
+						while ($row = $result->fetch_assoc()) {
+							echo "<tr><td>" . $row['id'] . "</td><td>" . $row['model'] . "</td><td>" . $row['command'] . "</td><td>" . $row['time'] . "</td></tr>";
+						}
+						$result->free();
+					}
+					echo '</table>';
+					$mysqli->close();
+			?>
+		</div>
+
+	</section>
+
+
+
+	<footer>
+			<p>&#169; 2020 <a href="https://www.instagram.com/orange_list/?hl=ru">KSENIA TSYBULKO</a></p>
+		</footer>
+</body>
+</html>
