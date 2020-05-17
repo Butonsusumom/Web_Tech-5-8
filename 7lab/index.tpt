@@ -1,0 +1,411 @@
+<?php
+
+session_start();
+include_once('const.php');
+$mysqli = @new mysqli(HOST, USER, PASS, DB);
+if ($mysqli->connect_errno) {
+    printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+    exit();
+}
+if((!isset($_COOKIE["password"]))&&(!isset($_SESSION["session_username"]))){
+           header("location: \Login_v1\index.php");
+}
+if(!isset($_COOKIE["password"])){
+$quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_SESSION["session_username"]."'");
+ $email=$_SESSION["session_username"];
+}
+else{
+        $quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_COOKIE['login']."'");
+         $email=$_COOKIE['login'];
+        }
+         $ro=$quer->fetch_assoc();
+         $status=$ro['status'];
+         if ($status=="admin"){
+          header("Location: /5lab/index.php");
+         }
+
+
+
+?>
+
+
+
+
+<?php
+include_once('const.php');
+$mysqli = @new mysqli(HOST, USER, PASS, DB);
+
+if ($mysqli->connect_errno) {
+    echo "Соединение не удалось: %s\n";
+    exit();
+}
+$timestamp =  date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME']);
+$SQL = "INSERT INTO visits (timestamp) VALUES ('".$timestamp."')";
+$mysqli->query($SQL);
+?>
+
+
+ <script type="text/javascript">
+        function calc() {
+            //получаем ссылку на элемент Select (Тип дизайна)
+            var a = document.getElementById("a");
+            var b = document.getElementById("b");
+            var c = document.getElementById("c");
+
+            var result = document.getElementById("result");
+
+            var price = 0;
+            price += parseInt(a.options[a.selectedIndex].value);
+            price += parseInt(b.options[b.selectedIndex].value);
+            price += parseInt(c.options[c.selectedIndex].value);
+
+            //result.innerHTML = price;
+            document.getElementById('result').value =  price;
+
+        }
+
+</script>
+
+
+<?php
+function mess($name,$type,$strings,$size,$model,$cost,$address,$delivery,$date){
+$s='<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                <title>A Simple Responsive HTML Email</title>
+                <style type="text/css">
+                  body {margin: 0; padding: 0; min-width: 100%!important;}
+                  img {height: auto;}
+                  .content {width: 100%; max-width: 600px;}
+                  .header {padding: 40px 30px 20px 30px;}
+                  .innerpadding {padding: 30px 30px 30px 30px;}
+                  .borderbottom {border-bottom: 1px solid #f2eeed;}
+                  .subhead {font-size: 15px; color: #ffffff; font-family: sans-serif; letter-spacing: 10px;}
+                  .h1, .h2, .bodycopy {color: #153643; font-family: sans-serif;}
+                  .h1 {font-size: 33px; line-height: 38px; font-weight: bold;}
+                  .h2 {padding: 0 0 15px 0; font-size: 24px; line-height: 28px; font-weight: bold;}
+                  .bodycopy {font-size: 16px; line-height: 22px;}
+                  .button {text-align: center; font-size: 18px; font-family: sans-serif; font-weight: bold; padding: 0 30px 0 30px;}
+                  .button a {color: #ffffff; text-decoration: none;}
+                  .footer {padding: 20px 30px 15px 30px;}
+                  .footercopy {font-family: sans-serif; font-size: 14px; color: #ffffff;}
+                  .footercopy a {color: #ffffff; text-decoration: underline;}
+
+                  @media only screen and (max-width: 550px), screen and (max-device-width: 550px) {
+                  body[yahoo] .hide {display: none!important;}
+                  body[yahoo] .buttonwrapper {background-color: #8e2de2;}
+                  body[yahoo] .button {padding: 0px!important;}
+                  body[yahoo] .button a {background-color: #8e2de2; padding: 15px 15px 13px!important;}
+                  body[yahoo] .unsubscribe {display: block; margin-top: 20px; padding: 10px 50px; background: #8e2de2; border-radius: 5px; text-decoration: none!important; font-weight: bold;}
+                  }
+
+                  /*@media only screen and (min-device-width: 601px) {
+                    .content {width: 600px !important;}
+                    .col425 {width: 425px!important;}
+                    .col380 {width: 380px!important;}
+                    }*/
+
+                  </style>
+    </head>
+
+    <body yahoo bgcolor="#f6f8f1">
+    <table width="100%" bgcolor="#f6f8f1" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td>
+        <table bgcolor="#ffffff" class="content" align="center" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td bgcolor="#8e2de2" class="header">
+              <table width="70" align="left" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td height="70" style="padding: 0 20px 20px 0;">
+                    <img class="fix" src="https://cdn.icon-icons.com/icons2/2070/PNG/512/guitar_icon_126886.png" width="70" height="70" border="0" alt=""/>
+                  </td>
+                </tr>
+              </table>
+              <table class="col425" align="left" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 425px;">
+                <tr>
+                  <td height="70">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="subhead" style="padding: 0 0 0 3px;">
+                          GUITARLAND
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="h1" style="padding: 5px 0 0 0;color:white;">
+                          Responsive Order Email
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td class="innerpadding borderbottom">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td class="h2">
+                    Your order is confirmed!
+                  </td>
+                </tr>
+                <tr>
+                  <td class="bodycopy">
+                    Hi, '. $name .' ! Let check order?
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td class="innerpadding borderbottom">
+              <table width="115" align="left" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td height="115" style="padding: 0 20px 20px 0;">
+                    <img class="fix" src="https://cdn.icon-icons.com/icons2/559/PNG/512/Electric_Guitar_icon-icons.com_53693.png" width="115" height="115" border="0" alt="" />
+                  </td>
+                </tr>
+              </table>
+              <table class="col380" align="left" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 380px;">
+                <tr>
+                  <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="bodycopy">
+                          Type:'.F.'<br>
+    					  Strings:'.  $strings.'<br>
+    					  Size:'.  $size.'<br>
+    					  Model:'.  $model.'<br>
+    					  Cost:'.  $cost.'<br>
+    					  Address:'.  $address.'<br>
+    					  Delivery:'.  $delivery.'<br>
+    					  Date:'.  $date.'<br>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 20px 0 0 0;">
+                          <table class="buttonwrapper" bgcolor="#8e2de2" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td class="button" height="45">
+                                <a href="localhost:81\Login_v1\index.php">Buy another one!</a>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+   <tr>
+        <td class="innerpadding borderbottom">
+          <img class="fix" src="https://i.etsystatic.com/17801536/r/il/31949f/1681657499/il_570xN.1681657499_k5cr.jpg" width="100%" border="0" alt="" />
+        </td>
+      </tr>
+      <tr>
+        <td class="innerpadding bodycopy">
+          Acoustic guitar is one of the most popular instruments in the world. Perhaps that is why the choice of a suitable model is a rather complicated process. After all, the guitars differ in the wood used in the production, the shape of the body, the width of the neck at the upper nut, as well as its length. In this article, we will consider the key features of various models and help you understand the full variety of tools on the market.
+        </td>
+      </tr>
+      <tr>
+        <td class="footer" bgcolor="#44525f">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td align="center" class="footercopy">
+                &reg; Tsybulko Ksenia, Minsk 2020<br/>
+              </td>
+            </tr>
+
+              </table>
+            </td>
+          </tr>
+        </table>
+        </td>
+      </tr>
+    </table>
+    </body></html>';
+return $s;
+}
+?>
+
+<!DOCTYPE HTML>
+
+
+<head>
+ <title>Order</title>
+     <link rel="stylesheet" href="css/main.css">
+     <link rel="stylesheet" href="css/index.css">
+     <link rel="stylesheet" href="css/contact.css">
+</head>
+<body link="white" vlink="white" alink="white">
+<body>
+<header>
+    <div class="title"></div>
+    <ul>
+
+        <li><a class="active" href="#">{DB="0"}</a></li>
+        <li><a href="contact.php">{DB="10"}</a></li>
+         <li><a href="/Login_v1/logout.php">{DB="11"}</a></li>
+    </ul>
+
+</header>
+
+ <section style="padding-top: 100px; padding-bottom: 90px;" class="about">
+        <div class="about-header">
+            <h1>Make your own guitar</h1>
+        </div>
+        <div class="card">
+
+         <form method="POST" >
+              <br>
+                  				<label for="type">Type</label><select  id="a" onchange="calc()" name="type" class="feedback-input" required>
+                  					<option value="10" >Acoustic</option>
+                  					<option value="15">Bass</option>
+                  					<option value="20">Electro</option>
+                  				</select>
+                  				    				<label for="number">Number of Strings</label><select  id="b" onchange="calc()" name="number" class="feedback-input" required>
+                                    					<option value="14">4</option>
+                                    					<option value="15">5</option>
+                                    					<option value="16">6</option>
+                                    					<option value="17">7</option>
+                                    				</select>
+                                                   				    				<label for="size">Size</label><select  id="c" onchange="calc()" name="size" class="feedback-input" required>
+                                                                     					<option value="30" >Small</option>
+                                                                     					<option value="50">3/4</option>
+                                                                     					<option value="60">Big</option>
+                                                                     				</select>
+                                <br><br><label for="result">Result Cost</label><input type="text"   id="result"  class="feedback-input" name="cost"  readonly="readonly"  value="54"  required>
+                                  <!--<div id="result">3900</div>-->
+                  				<br><br><label for="info">Model Name</label><input type="text" name="info" class="feedback-input"  placeholder="Input model.."  required>
+                  						<label for="del">Type of Delivery</label><select name="del" class="feedback-input" required>
+                                                <option value="delivery" selected>Delivery</option>
+                                                <option value="self">Self</option>
+                                        </select>
+                                 <label for="date">Date of Delivery</label><input type="date"  class="feedback-input" name="calendar" min=<?php echo date("Y-m-d") ?>  required><br><br>
+                  				<br><br><input type="submit" name="add" class="feedback-input" value="ORDER">
+
+
+                  				<?php
+                                    				include_once('const.php');
+
+                                    	if (isset($_POST['add'])) {
+
+                                    					$mysqli = @new mysqli(HOST, USER, PASS, DB);
+
+                                    					if ($mysqli->connect_errno) {
+                                    						echo "Соединение не удалось: %s\n";
+                                    						exit();
+                                    					}
+
+                                    					$imgUrl = 0;
+                                    					$dayType = "";
+                                    					$delType = "";
+
+                                    					switch ($_POST['type']) {
+                                    						case '20':
+                                    							$dayType = "Electro";
+                                    							$imgUrl = 1;
+                                    							break;
+                                    						case '15':
+                                    							$dayType = "Bass";
+                                    							$imgUrl = 2;
+                                    							break;
+                                    						case '10':
+                                    							$dayType = "Acoustic";
+                                    							$imgUrl = 3;
+                                    							break;
+                                    					}
+
+                                    					    switch ($_POST['del']) {
+                                                            						case 'delivery':
+                                                            							$delType = "delivery";
+
+                                                            							break;
+                                                            						case 'self':
+                                                            							$delType = "self";
+
+                                                            							break;
+
+                                                            }
+                                     					    switch ($_POST['size']) {
+                                                             						case '30':
+                                                             							$size= "Small";
+
+                                                             							break;
+                                                             						case '50':
+                                                             							$size = "3/4";
+
+                                                             							break;
+                                                             						case '60':
+                                                                                        $size= "Big";
+                                                                                        break;
+
+                                                             }
+                                    					    switch ($_POST['number']) {
+                                                            						case '14':
+                                                            							$number = "4";
+
+                                                            							break;
+                                                            						case '15':
+                                                            							$number = "5";
+
+                                                            							break;
+                                                            						case '16':
+                                                            							$number = "6";
+
+                                                            							break;
+                                                            						case '17':
+                                                            							$number = "7";
+
+                                                            							break;
+
+                                                            }
+
+                                                            $result = $mysqli->query("SELECT model FROM catalog WHERE  model='" . $_POST['info'] . "'");
+                                                            $r=$result->num_rows;
+                                                            if ($r <= 0){
+                                                                $res = $mysqli->query("SELECT * FROM usertbl WHERE  email='" . $email . "'");
+                                                                 $row=$res->fetch_assoc();
+                                                                  $id=$row['id'];
+                                                                  $nam=$row['nam'];
+                                                                  $address=$row['address'];
+                                                                  $mysqli->query("INSERT INTO `catalog` (date,model,address,type,img_id,delivery,status,person) values ('" . $_POST['calendar'] . "', '" . $_POST['info'] . "', '" . $address. "','" . $dayType. "', '" . $imgUrl. "','" .  $delType. "', 'in process' , $id);");
+
+
+
+                                            $formcontent = mess($nam,$dayType,$number,$size,$_POST['info'],$_POST['cost'],$address,$delType,$_POST['calendar']);
+                                           $subject = "=?utf-8?B?". base64_encode("Order Confirmation"). "?=";
+                                           $header = "From:no-reply@somedomain.com \r\n";
+                                           $header .= "Cc:tsubulko.manager@mail.ru \r\n";
+                                           $header .= "MIME-Version: 1.0\r\n";
+                                           $header .= "Content-type: text/html\r\n";
+                                    $recipient1 = $email;
+                                        mail($recipient1, $subject, $formcontent, $header) or die("Error!");
+                                                            }
+                                                            else {
+                                                                echo "<h4 style='color:black'>|Such model already exists|</h4 >";
+                                                            }
+
+                                    	}
+                                    ?>
+
+
+            </form>
+        </div>
+
+
+
+
+
+    </section>
+<br>
+
+
+
+</section>
+	<footer>
+			<p>&#169; 2020 <a href="https://www.instagram.com/orange_list/?hl=ru">KSENIA TSYBULKO</a></p>
+		</footer>
+</body>
+</html>

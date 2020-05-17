@@ -1,0 +1,125 @@
+<?php
+session_start();
+include_once('const.php');
+$mysqli = @new mysqli(HOST, USER, PASS, DB);
+if ($mysqli->connect_errno) {
+    printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+    exit();
+}
+
+if((!isset($_COOKIE["password"]))&&(!isset($_SESSION["session_username"]))){
+           header("location: \Login_v1\index.php");
+}
+if(!isset($_COOKIE["password"])){
+$quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_SESSION["session_username"]."'");
+}
+else{
+        $quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_COOKIE['login']."'");
+        }
+         $ro=$quer->fetch_assoc();
+         $status=$ro['status'];
+         if ($status=="admin"){
+          header("Location: /5lab/index.php");
+         }
+?>
+
+
+
+
+<?php
+include_once('const.php');
+$mysqli = @new mysqli(HOST, USER, PASS, DB);
+
+if ($mysqli->connect_errno) {
+    echo "Соединение не удалось: %s\n";
+    exit();
+}
+$timestamp =  date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME']);
+$SQL = "INSERT INTO visits (timestamp) VALUES ('".$timestamp."')";
+$mysqli->query($SQL);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+   <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+    <title>Contact</title>
+
+    <link rel="shortcut icon" type="image/png" href="images/favicon.png" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/contact.css">
+</head>
+<body link="white" vlink="white" alink="white">
+<body>
+    <header>
+        <div class="title"></div>
+        <ul>
+            <li><a href="index.php">{DB="0"}</a></li>
+            <li><a class="active" href="#">{DB="10"}</a></li>
+             <li><a href="\Login_v1\logout.php">{DB="11"}</a></li>
+			
+        </ul>
+    </header>
+
+    <!-- Contact section -->
+    <section class="about">
+        <div class="about-header">
+            <h1>{DB="10"}</h1>
+        </div>
+        <div class="card">
+         <form method="POST" >
+                <input name="name" type="text" class="feedback-input" placeholder="Name" required/>
+                <input name="email" type="text" class="feedback-input" placeholder="Email" required/>
+                <textarea name="message" class="feedback-input" placeholder="Message" required></textarea>
+                <input type="submit" name="submit" value="SUBMIT" />
+
+                        <?php
+
+
+                            if(isset($_POST["submit"])) {
+                            $name = $_POST['name'];
+                                                    $email = $_POST['email'];
+                                                    $message = $_POST['message'];
+                                                    $formcontent= $message;
+                                                    $recipient = "tsubulko.manager@mail.ru";
+                                                    $subject = "=?utf-8?B?". base64_encode("Reply from contact form <$email>"). "?=";
+                                                    $mailheader= 'From: '.$email . "\r\n" .
+                                                                'Reply-To: tsubulko.manager@gmail.com'. "\r\n" .
+                                                                'X-Mailer: PHP/' . phpversion();
+                                //if(!preg_match("/^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/u"
+                               // ,$email))
+                               // {
+                                //    $mes = "Wrong mail!";
+                               // }
+                               // else
+                               // {
+                                  //  $mes = "Your massage sended!";
+                                    mail($recipient, $subject, $formcontent, $mailheader) or die("Error!");
+                               // }
+                              //  echo $mes;
+                            }
+                        ?>
+            </form>
+        </div>
+
+
+
+
+    </section>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+	<footer>
+			<p>&#169; 2020 <a href="https://www.instagram.com/orange_list/?hl=ru">KSENIA TSYBULKO</a></p>
+		</footer>
+</body>
+</html>

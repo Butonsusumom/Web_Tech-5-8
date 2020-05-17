@@ -1,0 +1,174 @@
+<?php
+session_start();
+include_once('const.php');
+$mysqli = @new mysqli(HOST, USER, PASS, DB);
+if ($mysqli->connect_errno) {
+    printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+    exit();
+}
+if((!isset($_COOKIE["password"]))&&(!isset($_SESSION["session_username"]))){
+           header("location: \Login_v1\index.php");
+}
+if(!isset($_COOKIE["password"])){
+$quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_SESSION["session_username"]."'");
+}
+else{
+        $quer =$mysqli->query("SELECT * FROM usertbl WHERE email='".$_COOKIE['login']."'");
+        }
+         $ro=$quer->fetch_assoc();
+         $status=$ro['status'];
+         if ($status!="admin"){
+          header("Location: /7lab/index.php");
+         }
+?>
+
+
+
+<?php
+include_once('const.php');
+$mysqli = @new mysqli(HOST, USER, PASS, DB);
+
+if ($mysqli->connect_errno) {
+    echo "Соединение не удалось: %s\n";
+    exit();
+}
+
+
+
+
+$period = $_GET['period'] ?? 'day';
+
+switch($period){
+    case 'day':
+        $SQL = "SELECT COUNT(*) as count, timestamp
+                    FROM visits 
+                    WHERE DATE(timestamp) = CURDATE()
+                    GROUP BY UNIX_TIMESTAMP(timestamp) DIV 300";
+        $timestr = 'D M d Y H:i:s';
+        $name = 'Day';
+        $interval = 30;
+        $intervalType = 'minute';
+        $format = "hh:mm tt";
+        break;
+    case 'week':
+        $SQL = "SELECT COUNT(*) as count, timestamp
+                    FROM visits 
+                    WHERE YEARWEEK(timestamp)=YEARWEEK(NOW())
+                    GROUP BY UNIX_TIMESTAMP(timestamp) DIV 21600";
+        $timestr = 'D M d Y H:i:s';
+        $name = 'Week';
+        $interval = 6;
+        $intervalType = 'hour';
+        $format = "D MMMM hh:mm tt";
+        break;
+    case 'month':
+        $SQL = "SELECT COUNT(*) as count, timestamp
+                    FROM visits 
+                    WHERE MONTH(timestamp)=MONTH(NOW())
+                    GROUP BY DAY(timestamp)";
+        $timestr = 'D M d Y ';
+        $name = 'Month';
+        $interval = 3;
+        $intervalType = 'day';
+        $format = "DD MMM";
+        break;
+    case 'year':
+        $SQL = "SELECT COUNT(*) as count, timestamp
+                    FROM visits 
+                    WHERE YEAR(timestamp)=YEAR(NOW())
+                    GROUP BY WEEK(timestamp)";
+        $timestr = 'M 01 Y ';
+        $name = 'Year';
+        $interval = 3;
+        $intervalType = 'week';
+        $format = "DD MMM";
+        break;
+}
+
+?>
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+
+
+
+
+    <script type="text/javascript">
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer",
+                {
+                    title:{
+                        text: "Visits Statictic (<?=$name?>)"
+                    },
+                    axisX:{
+                        interval: <?=$interval?>,
+                        intervalType: "<?=$intervalType?>",
+                        valueFormatString: "<?=$format?>"
+                    },
+                    data: [{
+                        type: "spline",
+                        dataPoints: [
+                            <?php
+                            $result = $mysqli->query($SQL);
+                            while ($row = $result->fetch_assoc()):
+                            $currentDate = date($timestr, (strtotime($row['timestamp'])) );
+                            ?>
+                            { x: new Date('<?=$currentDate?>'), y : <?=$row['count']?>, label: '<?=$currentDate?>' },
+                            <?php endwhile; ?>
+                        ]
+                    }]
+                });
+            chart.render();
+
+        }
+    </script>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+
+    </ul>
+
+      <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/index.css">
+        <link rel="stylesheet" href="css/style.css">
+</head>
+<body link="white" vlink="white" alink="white">
+<body>
+<header>
+    <div class="title"></div>
+    <ul>
+        <li><a href="\5lab\index.php">{DB="0"}</a></li>
+        <li><a href="\5lab\admin.php">{DB="1"}</a></li>
+        <li><a href="\5lab\asking.php">{DB="2"}</a></li>
+        <li><a href="\5lab\search.php">{DB="3"}</a></li>
+        <li><a class="active" href="#">{DB="4"}</a></li>
+         <li><a href="\Login_v1\logout.php">{DB="11"}</a></li>
+    </ul>
+
+</header>
+
+<section class="landing">
+    <div class="landing-main">
+        <div>
+<a href="index.php?period=day" color="white">Day</a>
+<a href="index.php?period=week" color="white">Week</a>
+<a href="index.php?period=month" color="white">Month</a>
+<a href="index.php?period=year" color="white">Year</a>
+        </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+        <div id="chartContainer" style="height: 300px; width: 800px;">
+        </div>
+    </div>
+</section>
+	<footer>
+			<p>&#169; 2020 <a href="https://www.instagram.com/orange_list/?hl=ru">KSENIA TSYBULKO</a></p>
+		</footer>
+</body>
+</html>
